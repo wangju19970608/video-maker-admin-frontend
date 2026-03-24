@@ -103,5 +103,17 @@ export const adminApi = {
   },
   deleteOrder(orderId) {
     return unwrap(http.delete(`/orders/${orderId}`));
+  },
+  downloadTemplateDocx(orderId) {
+    return http.get(`/orders/${orderId}/template-docx`, { responseType: 'blob' }).then(res => res.data);
+  },
+  uploadCustomDocx(orderId, file) {
+    const formData = new FormData();
+    formData.append("file", file);
+    return unwrap(http.post(`/orders/${orderId}/generate-custom`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data"
+      }
+    }));
   }
 };
