@@ -1,4 +1,4 @@
-﻿import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 import AdminLayout from "../components/layout/AdminLayout.vue";
 import LoginView from "../views/LoginView.vue";
 import DashboardView from "../views/DashboardView.vue";
@@ -8,6 +8,7 @@ import MenusView from "../views/MenusView.vue";
 import TemplatesView from "../views/TemplatesView.vue";
 import OrdersView from "../views/OrdersView.vue";
 import SalesView from "../views/SalesView.vue";
+import AlipayConfigView from "../views/AlipayConfigView.vue";
 import { PAGE_CONFIG } from "../constants/navigation";
 import { useAdminStore } from "../stores/adminStore";
 
@@ -103,6 +104,16 @@ const router = createRouter({
             title: PAGE_CONFIG.sales.title,
             description: PAGE_CONFIG.sales.description,
             permission: PAGE_CONFIG.sales.permission
+          }
+        },
+        {
+          path: "alipay-config",
+          name: "alipay-config",
+          component: AlipayConfigView,
+          meta: {
+            title: PAGE_CONFIG.alipayConfig.title,
+            description: PAGE_CONFIG.alipayConfig.description,
+            permission: PAGE_CONFIG.alipayConfig.permission
           }
         }
       ]

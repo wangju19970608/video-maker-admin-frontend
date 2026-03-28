@@ -1,4 +1,4 @@
-﻿export const PAGE_CONFIG = {
+export const PAGE_CONFIG = {
   dashboard: {
     path: "/dashboard",
     title: "数据看板",
@@ -40,6 +40,12 @@
     title: "销售统计",
     description: "每日销售与模板销售排行",
     permission: "stats:sales:view"
+  },
+  alipayConfig: {
+    path: "/alipay-config",
+    title: "支付宝配置",
+    description: "配置支付宝 AppID、密钥及回调地址",
+    permission: "sys:alipay:config"
   }
 };
 
