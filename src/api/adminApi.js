@@ -133,13 +133,6 @@ export const adminApi = {
         "Content-Type": "multipart/form-data"
       }
     }));
-  },
-
-  getAlipayConfig() {
-    return unwrap(http.get("/alipay-config"));
-  },
-  saveAlipayConfig(payload) {
-    return unwrap(http.put("/alipay-config", payload));
   }
 };
 
