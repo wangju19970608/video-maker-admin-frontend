@@ -1,4 +1,4 @@
-﻿export const PAGE_CONFIG = {
+export const PAGE_CONFIG = {
   dashboard: {
     path: "/dashboard",
     title: "数据看板",

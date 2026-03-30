@@ -41,6 +41,29 @@
             <option :value="0">禁用</option>
           </select>
         </label>
+        <label>
+          企微客服工作状态
+          <select v-model="form.customerServiceActive">
+            <option :value="true">接单中</option>
+            <option :value="false">休息中</option>
+          </select>
+        </label>
+        <label>
+          客服权重(分配优先级)
+          <input v-model.number="form.customerServiceWeight" type="number" min="1" />
+        </label>
+        <label class="full">
+          企微二维码图片 URL
+          <div style="display: flex; gap: 10px;">
+            <input v-model.trim="form.wechatQrUrl" placeholder="输入 URL 或点击上传" style="flex: 1;" />
+            <input type="file" ref="qrFileInput" style="display: none;" @change="handleQrUpload" accept="image/*" />
+            <button type="button" class="ghost" @click="$refs.qrFileInput.click()">上传图片</button>
+          </div>
+        </label>
+        <label class="full">
+          企微直跳链接
+          <input v-model.trim="form.wechatLink" placeholder="例如: https://work.weixin.qq.com/kfid/kfc..." />
+        </label>
       </div>
       <div class="check-group">
         <span>角色分配：</span>
@@ -112,8 +135,28 @@ const form = reactive({
   email: "",
   phone: "",
   status: 1,
-  roleIds: []
+  roleIds: [],
+  customerServiceActive: false,
+  customerServiceWeight: 1,
+  wechatQrUrl: "",
+  wechatLink: ""
 });
+
+const qrFileInput = ref(null);
+
+async function handleQrUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  try {
+    const url = await adminApi.uploadAsset(file);
+    form.wechatQrUrl = url;
+    store.setNotice("二维码上传成功", "success");
+  } catch (error) {
+    store.handleError(error, "上传失败");
+  } finally {
+    event.target.value = "";
+  }
+}
 
 async function loadRoles() {
   roles.value = await adminApi.getRoles();
@@ -140,7 +183,11 @@ function openCreate() {
     email: "",
     phone: "",
     status: 1,
-    roleIds: []
+    roleIds: [],
+    customerServiceActive: false,
+    customerServiceWeight: 1,
+    wechatQrUrl: "",
+    wechatLink: ""
   });
   formVisible.value = true;
 }
@@ -155,7 +202,11 @@ function openEdit(item) {
     email: item.email,
     phone: item.phone,
     status: item.status,
-    roleIds: [...(item.roleIds || [])]
+    roleIds: [...(item.roleIds || [])],
+    customerServiceActive: item.customerServiceActive || false,
+    customerServiceWeight: item.customerServiceWeight || 1,
+    wechatQrUrl: item.wechatQrUrl || "",
+    wechatLink: item.wechatLink || ""
   });
   formVisible.value = true;
 }

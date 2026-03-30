@@ -1,4 +1,4 @@
-﻿import { http, unwrap } from "./http";
+import { http, unwrap } from "./http";
 
 function cleanParams(params) {
   const result = {};
@@ -19,6 +19,24 @@ export const adminApi = {
   },
   logout() {
     return unwrap(http.delete("/sessions/current"));
+  },
+
+  uploadAsset(file) {
+    const formData = new FormData();
+    formData.append("file", file);
+    return unwrap(http.post("/assets/upload", formData, {
+      headers: { "Content-Type": "multipart/form-data" }
+    }));
+  },
+
+  getConfigs() {
+    return unwrap(http.get("/configs"));
+  },
+  getConfig(key) {
+    return unwrap(http.get(`/configs/${key}`));
+  },
+  setConfig(key, value, description) {
+    return unwrap(http.post(`/configs/${key}`, { value, description }));
   },
 
   getOverview() {
@@ -117,3 +135,4 @@ export const adminApi = {
     }));
   }
 };
+

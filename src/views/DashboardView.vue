@@ -17,6 +17,13 @@
         <h4>订单总数</h4>
         <p>{{ overview.totalOrders || 0 }}</p>
       </article>
+      <article class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+        <h4>全站微信客服入口</h4>
+        <div style="margin-top: 10px;">
+          <span style="margin-right: 15px; font-weight: bold; color: var(--primary-color);">{{ isCustomerServiceEnabled ? '🟢 运行中' : '🔴 已关停' }}</span>
+          <button class="ghost mini" @click="toggleCustomerService">{{ isCustomerServiceEnabled ? '点击关闭' : '点击开启' }}</button>
+        </div>
+      </article>
     </div>
 
     <div class="panel-grid">
@@ -82,18 +89,33 @@ const overview = reactive({
 const dailySales = ref([]);
 const topTemplates = ref([]);
 
+const isCustomerServiceEnabled = ref(false);
+
 async function loadData() {
   try {
-    const [overviewData, dailyData, topData] = await Promise.all([
+    const [overviewData, dailyData, topData, csConfig] = await Promise.all([
       adminApi.getOverview(),
       adminApi.getDailySales(14),
-      adminApi.getTopTemplates(10)
+      adminApi.getTopTemplates(10),
+      adminApi.getConfig("CUSTOMER_SERVICE_ENABLED").catch(() => ({ value: "false" }))
     ]);
     Object.assign(overview, overviewData || {});
     dailySales.value = dailyData || [];
     topTemplates.value = topData || [];
+    isCustomerServiceEnabled.value = String(csConfig.value).toLowerCase() === "true";
   } catch (error) {
     store.handleError(error, "加载看板数据失败");
+  }
+}
+
+async function toggleCustomerService() {
+  const nextVal = !isCustomerServiceEnabled.value ? "true" : "false";
+  try {
+    await adminApi.setConfig("CUSTOMER_SERVICE_ENABLED", nextVal, "全站微信客服模块总开关");
+    isCustomerServiceEnabled.value = nextVal === "true";
+    store.setNotice(`已${isCustomerServiceEnabled.value ? '开启' : '关闭'}全站客服系统`, "success");
+  } catch (error) {
+    store.handleError(error, "切换客服状态失败");
   }
 }
 
