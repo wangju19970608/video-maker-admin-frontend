@@ -2,7 +2,7 @@
   <section class="login-page">
     <div class="login-card">
       <h1>生日视频商城后台</h1>
-      <p>默认管理员账号：admin / Admin@123456</p>
+<!--      <p>默认管理员账号：admin / Admin@123456</p>-->
       <label>
         用户名
         <input v-model.trim="loginForm.username" autocomplete="username" />
@@ -30,8 +30,8 @@ const store = useAdminStore();
 
 const loading = ref(false);
 const loginForm = reactive({
-  username: "admin",
-  password: "Admin@123456"
+  username: "",
+  password: ""
 });
 
 function firstAccessiblePath() {

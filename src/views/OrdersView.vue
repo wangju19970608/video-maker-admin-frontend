@@ -148,7 +148,7 @@ const filters = reactive({
 
 async function viewParameters(url) {
   try {
-    const baseUrl = import.meta.env.VITE_API_BASE || "http://localhost:8080/api";
+    const baseUrl = import.meta.env.VITE_API_BASE || "http://118.178.169.23:38080/api";
     const rootUrl = baseUrl.replace(/\/api\/admin\/?$/, "").replace(/\/api\/?$/, "");
     const res = await fetch(`${rootUrl}${url}`);
     if (res.ok) {
@@ -164,7 +164,7 @@ async function viewParameters(url) {
 const canUpdateStatus = computed(() => store.hasPermission("mall:order:update,mall:order:view"));
 
 function getTaskUrl(taskId, type) {
-  const baseUrl = import.meta.env.VITE_API_BASE || "http://localhost:8080/api";
+  const baseUrl = import.meta.env.VITE_API_BASE || "http://118.178.169.23:38080/api";
   const rootUrl = baseUrl.replace(/\/api\/admin\/?$/, "").replace(/\/api\/?$/, "");
   return `${rootUrl}/api/video/tasks/${taskId}/${type}`;
 }
