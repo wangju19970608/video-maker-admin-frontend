@@ -1,7 +1,7 @@
 ﻿import axios from "axios";
 import { TOKEN_KEY } from "../constants/auth";
 
-const API_BASE = import.meta.env.VITE_ADMIN_API_BASE || "http://localhost:8080/api/admin";
+const API_BASE = import.meta.env.VITE_ADMIN_API_BASE || "http://118.178.169.23:38080/api/admin";
 
 export const http = axios.create({
   baseURL: API_BASE,
