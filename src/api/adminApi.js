@@ -133,6 +133,29 @@ export const adminApi = {
         "Content-Type": "multipart/form-data"
       }
     }));
+  },
+
+  uploadTemplateFile(templateId, file) {
+    const formData = new FormData();
+    formData.append("file", file);
+    return unwrap(http.post(`/templates/${templateId}/upload-file`, formData, {
+      headers: { "Content-Type": "multipart/form-data" }
+    }));
+  },
+
+  // Template config (overlayRules + formFields)
+  getTemplateConfig(templateId) {
+    return unwrap(http.get(`/templates/${templateId}/config`));
+  },
+  saveTemplateConfig(templateId, payload) {
+    return unwrap(http.put(`/templates/${templateId}/config`, payload));
+  },
+  uploadTemplateVideo(templateId, file) {
+    const formData = new FormData();
+    formData.append("file", file);
+    return unwrap(http.post(`/templates/${templateId}/config/upload-video`, formData, {
+      headers: { "Content-Type": "multipart/form-data" }
+    }));
   }
 };
 

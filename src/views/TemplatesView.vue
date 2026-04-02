@@ -62,6 +62,13 @@
           排序
           <input v-model.number="form.sortOrder" type="number" />
         </label>
+        <label>
+          模板类型
+          <select v-model="form.templateType">
+            <option value="">docx（默认）</option>
+            <option value="video">video（原生视频）</option>
+          </select>
+        </label>
         <label class="full">
           副标题
           <input v-model.trim="form.subtitle" />
@@ -75,6 +82,17 @@
         <PermissionButton permission="mall:template:update,mall:template:create,mall:template:view" @click="saveTemplate">保存</PermissionButton>
         <button class="ghost" @click="formVisible = false">取消</button>
       </div>
+    </div>
+
+    <!-- 模板配置编辑器 -->
+    <div v-if="configEditorTemplateId" class="form-card">
+      <h4>模板配置编辑器 — #{{ configEditorTemplateId }}</h4>
+
+      <TemplateConfigEditor
+        :template-id="configEditorTemplateId"
+        @cancel="configEditorTemplateId = null"
+        @saved="configEditorTemplateId = null"
+      />
     </div>
 
     <div class="table-wrapper">
@@ -102,6 +120,7 @@
             <td>{{ item.enabled ? "已上架" : "已下架" }}</td>
             <td>
               <PermissionButton class="mini" permission="mall:template:update,mall:template:view" @click="openEdit(item)">编辑</PermissionButton>
+              <PermissionButton class="mini" permission="mall:template:update,mall:template:view" @click="openConfigEditor(item)">配置</PermissionButton>
               <PermissionButton class="mini" permission="mall:template:update,mall:template:view" @click="toggleStatus(item)">
                 {{ item.enabled ? "下架" : "上架" }}
               </PermissionButton>
@@ -117,6 +136,7 @@
 <script setup>
 import { onMounted, reactive, ref } from "vue";
 import PermissionButton from "../components/PermissionButton.vue";
+import TemplateConfigEditor from "../components/TemplateConfigEditor.vue";
 import { adminApi } from "../api/adminApi";
 import { useAdminStore } from "../stores/adminStore";
 import { formatAmount } from "../utils/format";
@@ -128,6 +148,7 @@ const filters = reactive({ keyword: "", enabled: "" });
 
 const formVisible = ref(false);
 const formMode = ref("create");
+const configEditorTemplateId = ref(null);
 const form = reactive({
   id: null,
   templateCode: "",
@@ -144,6 +165,7 @@ const form = reactive({
   colorEnd: "#81000f",
   inventoryCount: 99999,
   sortOrder: 0,
+  templateType: "",
   enabled: true
 });
 
@@ -176,8 +198,10 @@ function openCreate() {
     colorEnd: "#81000f",
     inventoryCount: 99999,
     sortOrder: 0,
+    templateType: "",
     enabled: true
   });
+  configEditorTemplateId.value = null;
   formVisible.value = true;
 }
 
@@ -199,9 +223,16 @@ function openEdit(item) {
     colorEnd: item.colors?.[1] || "#81000f",
     inventoryCount: item.inventoryCount || 99999,
     sortOrder: item.sortOrder || 0,
+    templateType: item.templateType || "",
     enabled: !!item.enabled
   });
+  configEditorTemplateId.value = null;
   formVisible.value = true;
+}
+
+function openConfigEditor(item) {
+  formVisible.value = false;
+  configEditorTemplateId.value = item.id;
 }
 
 async function saveTemplate() {
@@ -245,3 +276,6 @@ async function removeTemplate(item) {
 
 onMounted(loadTemplates);
 </script>
+
+<style scoped>
+</style>
